@@ -1,5 +1,6 @@
 export default class DynamicTypeLayer{
-    constructor(){
+    constructor(transparentcolor){
+        this.transparentcolor = transparentcolor;
         this.world = [];
     }
 }

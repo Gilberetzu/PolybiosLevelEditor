@@ -3,6 +3,8 @@
     import LevelEditor from "./components/LevelEditor/LevelEditor.svelte";
     import SideMenu from "./components/SideMenu/SideMenu.svelte";
 
+    import StartWindow from "./components/StartWindow/StartWindow.svelte";
+
     export let projectManager;
 </script>
 
@@ -33,3 +35,5 @@
     <LevelEditor {projectManager} />
     <SideMenu {projectManager} />
 </div>
+
+<StartWindow {projectManager} />

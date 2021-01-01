@@ -32,7 +32,7 @@ export default class LevelCollection {
         console.log(this.levels);
 
         this.levels.push(
-            new Level(levelInfo.width, levelInfo.height, levelInfo.name, levelInfo.createCollision, levelInfo.layers)
+            new Level(levelInfo.width, levelInfo.height, levelInfo.name, levelInfo.createCollision, levelInfo.layers, levelInfo.backgroundColor)
         );
 
         this.subscriptionManager.callSubscribedCallback("LEVEL_ADDED");

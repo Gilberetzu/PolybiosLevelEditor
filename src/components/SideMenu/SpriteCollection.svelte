@@ -10,7 +10,6 @@
     let searchInput = "";
     let imageSelected = -1;
     let transparent = false;
-    let background = false;
 
     let textHover = "";
     let textHoverTop = 0;
@@ -67,7 +66,6 @@
     const getDataFromSpriteCollection = () => {
         imageSelected = projectManager.spriteCollection.selectedSprite;
         transparent = projectManager.spriteCollection.transparent;
-        background = projectManager.spriteCollection.background;
     };
 
     const spriteCollectionUpdated = (TYPE) => {
@@ -194,14 +192,6 @@
                     projectManager.spriteCollection.setAsTransparent();
                 }}>
                 <div>T</div>
-            </div>
-            <div
-                class:specialColors={true}
-                class:imgSelected={background}
-                on:click={() => {
-                    projectManager.spriteCollection.setAsBackground();
-                }}>
-                <div>BG</div>
             </div>
             {#each filteredImages as image}
                 <div>

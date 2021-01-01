@@ -6,10 +6,10 @@
     import HeightIcon from "../Icons/Height.svelte";
     import WidthIcon from "../Icons/Width.svelte";
     import LayerConfiguration from "./LayerConfiguration.svelte";
+    
+    import ColorPicker from "../ColorPicker/ColorPicker.svelte";
 
     import IconInput from "../IconInput/IconInput.svelte";
-
-    import ColorPicker from "../ColorPicker/ColorPicker.svelte";
 
     export let projectManager;
     export let openWindow;
@@ -19,6 +19,7 @@
     let levelWidth;
     let levelHeight;
     let createCollision;
+    let backgroundColor;
 
     let getLayer1;
     let getLayer2;
@@ -33,6 +34,7 @@
                 name: levelName,
                 createCollision: createCollision,
                 layers: [getLayer1(), getLayer2(), getLayer3(), getLayer4()],
+                backgroundColor: backgroundColor
             });
             closeWindow();
         } catch (error) {
@@ -97,12 +99,9 @@
 
         <div class="sectionContainer">
             <div class="inputSectionTitle">Pick Background Color</div>
-            <ColorPicker fieldName={"Background Color"}/>
-        </div>
-
-        <div class="sectionContainer">
-            <div class="inputSectionTitle">Pick Transparent Color</div>
-            <ColorPicker fieldName={"Transparent Color"}/>
+            <ColorPicker
+                fieldName={'Background Color'}
+                bind:pickedColor={backgroundColor} />
         </div>
 
         <div class="createCollision sectionContainer">

@@ -5,6 +5,8 @@
 <style>
     .container{
         padding: 8px 16px 8px 16px;
+        cursor: pointer;
+        user-select: none;
         border-radius: 100px;
         background-color: var(--editorBgColor);
         color: var(--editorUIText);

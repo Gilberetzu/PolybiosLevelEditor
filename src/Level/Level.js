@@ -3,8 +3,10 @@ import ArrayTypeLayer from "./Layers/ArrayTypeLayer";
 import DynamicTypeLayer from "./Layers/DynamicTypeLayer";
 
 export default class Level {
-    constructor(width, height, name, createCollision, layers) {
+    constructor(width, height, name, createCollision, layers, backgroundColor) {
         this.name = name;
+
+        this.backgroundColor = backgroundColor;
 
         if (width % 4 != 0) {
             throw new Error("Selected width is not a multiple of 4");
@@ -30,11 +32,11 @@ export default class Level {
             const layer = layers[i];
             if(layer){
                 if (layer.type == "ARRAY_8x8") {
-                    this.layers[i] = new ArrayTypeLayer(this.width, this.height, "8x8", layer.useParalax, layer.paralaxShiftAmount);
+                    this.layers[i] = new ArrayTypeLayer(this.width, this.height, "8x8", layer.useParalax, layer.paralaxShiftAmount, layer.transparentcolor);
                 } else if (layer.type == "ARRAY_16x16") {
-                    this.layers[i] = new ArrayTypeLayer(this.width, this.height, "16x16", layer.useParalax, layer.paralaxShiftAmount);
+                    this.layers[i] = new ArrayTypeLayer(this.width, this.height, "16x16", layer.useParalax, layer.paralaxShiftAmount, layer.transparentcolor);
                 } else if (layer.type == "DYNAMIC") {
-                    this.layers[i] = new DynamicTypeLayer();
+                    this.layers[i] = new DynamicTypeLayer(layer.transparentcolor);
                 }
             }else{
                 this.layers[i] = null;

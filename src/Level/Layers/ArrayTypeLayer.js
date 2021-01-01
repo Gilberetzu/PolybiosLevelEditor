@@ -1,5 +1,7 @@
 export default class ArrayTypeLayer{
-    constructor(width, height, spriteSize, useParalax, paralaxShiftAmount){
+    constructor(width, height, spriteSize, useParalax, paralaxShiftAmount, transparentcolor){
+        this.transparentcolor = transparentcolor;
+
         this.width = width;
         this.height = height;
         this.spriteSize = spriteSize;
@@ -30,6 +32,11 @@ export default class ArrayTypeLayer{
             }
 
             this.world = new Array((width/16) * (height/16));
+        }
+
+        //Setting every world tile to transparent
+        for (let i = 0; i < this.world.length; i++) {
+            this.world[i] = "TRANSPARENT";
         }
     }
 }

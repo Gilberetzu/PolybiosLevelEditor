@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import ArrayEditableElement from "./ArrayEditableElement";
+import Background from "../Renderers/Background";
 
 export default class ArrayTypeLayerEditor {
     constructor(spriteCollection, levelCollection, pixiApp, layerIndex) {
@@ -9,9 +10,15 @@ export default class ArrayTypeLayerEditor {
         const selectedLevel = levelCollection.getSelectedLevel();
         const selectedLayer = selectedLevel.layers[layerIndex];
 
-        this.container = new PIXI.Container();
         this.pixiApp = pixiApp;
-        this.pixiApp.stage.addChild(this.container);
+
+        //This should be changed to its own object, because there are some options it needs
+        this.globalContainer = new PIXI.Container();
+        this.pixiApp.stage.addChild(this.globalContainer);
+
+        this.container = new PIXI.Container();
+        this.bgRenderer = new Background(this.globalContainer, selectedLevel.backgroundColor, selectedLevel.width, selectedLevel.height);
+        this.globalContainer.addChild(this.container);
 
         this.spriteSize = selectedLayer.spriteSize == "16x16" ? 16 : 8;
 
@@ -64,8 +71,12 @@ export default class ArrayTypeLayerEditor {
     }
 
     getCurrentSpriteName(){
-        const currentSprite = this.getCurrentSprite();
-        return currentSprite ? currentSprite.textureMetaData.name : null;
+        if(this.spriteCollection.transparent){
+            return "TRANSPARENT";
+        }else{
+            const currentSprite = this.getCurrentSprite();
+            return currentSprite ? currentSprite.textureMetaData.name : null;
+        }
     }
 
     setTileToCurrentSprite(worldIndex){
@@ -79,8 +90,10 @@ export default class ArrayTypeLayerEditor {
             for (let i = 0; i < this.editableElements.length; i++) {
                 this.editableElements[i].destroy();
             }
-            this.pixiApp.stage.removeChild(this.container);
+            this.pixiApp.stage.removeChild(this.globalContainer);
+            this.bgRenderer.destroy();
             this.container.destroy();
+            this.globalContainer.destroy();
         }
         this.destroyed = true;
     }

@@ -18,6 +18,24 @@ export default class Background{
         container.addChild(this.bgGraphic);
     }
 
+    toggle(){
+        if(this.bgGraphic.alpha == 1){
+            this.hide();
+            return false;
+        }else{
+            this.show();
+            return true;
+        }
+    }
+
+    show(){
+        this.bgGraphic.alpha = 1;
+    }
+
+    hide(){
+        this.bgGraphic.alpha = 0;
+    }
+
     destroy(){
         this.bgGraphic.destroy();
     }

@@ -1,99 +1,101 @@
 import * as PIXI from "pixi.js";
 import ArrayEditableElement from "./ArrayEditableElement";
+import LayerEditor from "../LayerEditor";
+
+import ArrayTypeLayerRenderer from "../Renderers/ArrayTypeLayerRenderer";
 import Background from "../Renderers/Background";
+import ToolToggle from "../ToolToggle";
 
-export default class ArrayTypeLayerEditor {
-    constructor(spriteCollection, levelCollection, pixiApp, layerIndex) {
-        this.spriteCollection = spriteCollection;
-        this.levelCollection = levelCollection;
+export default class ArrayTypeLayerEditor extends LayerEditor {
+    constructor(spriteCollection, levelCollection, pixiApp, layerIndex, editorTools) {
+        super(spriteCollection, levelCollection, pixiApp, layerIndex);
+
         this.layerIndex = layerIndex;
-        const selectedLevel = levelCollection.getSelectedLevel();
-        const selectedLayer = selectedLevel.layers[layerIndex];
-
-        this.pixiApp = pixiApp;
-
-        //This should be changed to its own object, because there are some options it needs
-        this.globalContainer = new PIXI.Container();
-        this.pixiApp.stage.addChild(this.globalContainer);
-
-        this.container = new PIXI.Container();
-        this.bgRenderer = new Background(this.globalContainer, selectedLevel.backgroundColor, selectedLevel.width, selectedLevel.height);
-        this.globalContainer.addChild(this.container);
+        this.editorTools = editorTools;
+        
+        const selectedLevel = this.levelCollection.getSelectedLevel();
+        const selectedLayer = selectedLevel.layers[this.layerIndex];
 
         this.spriteSize = selectedLayer.spriteSize == "16x16" ? 16 : 8;
 
+        //Setting the container to handle what happens when the mouse is down
+        this.isMouseDown = false;
+        this.layerContainer.hitArea = new PIXI.Rectangle(0, 0, selectedLevel.width, selectedLevel.height);
+        this.layerContainer.interactive = true;
+        this.layerContainer.on("mousedown", this.mouseDown.bind(this));
+        this.layerContainer.on("mouseup", this.mouseUp.bind(this));
+        this.layerContainer.on("mouseout", this.mouseUp.bind(this));
+
         this.editableElements = [];
+        this.createEditableElements();
+
+        this.createTools();
+    }
+
+    createTools() {
+        let tools = [...this.createBackgroundRendererToggles(), ...this.createLayerRendererToggles()];
+        this.editorTools.setTools(tools);
+    }
+
+    createEditableElements() {
+        const selectedLevel = this.levelCollection.getSelectedLevel();
+        const selectedLayer = selectedLevel.layers[this.layerIndex];
 
         let currentX = 0;
         let currentY = 0;
 
         for (let i = 0; i < selectedLayer.world.length; i++) {
             const tileSpriteName = selectedLayer.world[i];
-            this.editableElements[i] = new ArrayEditableElement(currentX, currentY, this.container, this.spriteSize, this, tileSpriteName, i);
-            
+            this.editableElements[i] = new ArrayEditableElement(currentX, currentY, this.layerContainer, this.spriteSize, this, tileSpriteName, i);
             currentX += this.spriteSize;
-            if(currentX >= selectedLevel.width){
+            if (currentX >= selectedLevel.width) {
                 currentX = 0;
                 currentY += this.spriteSize;
             }
         }
-
-        this.isMouseDown = false;
-        this.container.hitArea = new PIXI.Rectangle(0,0,selectedLevel.width, selectedLevel.height);
-        this.container.interactive = true;
-        this.container.on("mousedown", this.mouseDown.bind(this));
-        this.container.on("mouseup", this.mouseUp.bind(this));
-        this.container.on("mouseout", this.mouseUp.bind(this));
-
-        this.destroyed = false;
     }
 
-    mouseDown(){
+    mouseDown() {
         this.isMouseDown = true;
     }
-    mouseUp(){
+    mouseUp() {
         this.isMouseDown = false;
     }
 
-    getCurrentSprite(){
+    getCurrentSprite() {
         const selectedSprite = this.spriteCollection.getSelectedSprite();
-        console.log("selected sprite: ", selectedSprite);
-        console.log("size: ", this.spriteSize);
-        if(selectedSprite){
-            if(selectedSprite.getSpriteSize() == this.spriteSize){
+        if (selectedSprite) {
+            if (selectedSprite.getSpriteSize() == this.spriteSize) {
                 return selectedSprite;
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
 
-    getCurrentSpriteName(){
-        if(this.spriteCollection.transparent){
+    getCurrentSpriteName() {
+        if (this.spriteCollection.transparent) {
             return "TRANSPARENT";
-        }else{
+        } else {
             const currentSprite = this.getCurrentSprite();
             return currentSprite ? currentSprite.textureMetaData.name : null;
         }
     }
 
-    setTileToCurrentSprite(worldIndex){
+    setTileToCurrentSprite(worldIndex) {
         const selectedLevel = this.levelCollection.getSelectedLevel();
         const selectedLayer = selectedLevel.layers[this.layerIndex];
         selectedLayer.world[worldIndex] = this.getCurrentSpriteName();
     }
 
-    destroy(){
-        if(!this.destroyed){
+    destroy() {
+        if (!this.destroyed) {
+            super.destroy();
             for (let i = 0; i < this.editableElements.length; i++) {
                 this.editableElements[i].destroy();
             }
-            this.pixiApp.stage.removeChild(this.globalContainer);
-            this.bgRenderer.destroy();
-            this.container.destroy();
-            this.globalContainer.destroy();
         }
         this.destroyed = true;
     }

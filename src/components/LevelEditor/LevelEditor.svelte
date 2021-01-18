@@ -1,7 +1,7 @@
 <script>
-    import * as PIXI from "pixi.js";
     import { onMount } from "svelte";
-    import ModeSelector from "./ModeSelector.svelte";
+    import ToolSelection from "./ToolSelection.svelte";
+    //import ModeSelector from "./ModeSelector.svelte";
 
     export let projectManager;
     let htmlContainer;
@@ -35,5 +35,5 @@
 </style>
 
 <div bind:this={htmlContainer} class="htmlContainer">
-    <ModeSelector {projectManager} />
+    <ToolSelection {projectManager} />
 </div>

@@ -39,4 +39,25 @@ export default class ArrayTypeLayer{
             this.world[i] = "TRANSPARENT";
         }
     }
+
+    getNumericSpriteSize(){
+        if(this.spriteSize == "8x8"){
+            return 8;
+        }else if(this.spriteSize == "16x16"){
+            return 16;
+        }else{
+            throw new Error(`The sprite size was not set to a correct value. Current value: ${this.spriteSize}`);
+        }
+    }
+
+    createSaveData(){
+        return {
+            type: "ARRAY_TYPE_LAYER",
+            spriteSize: this.spriteSize,
+            useParalax: this.useParalax,
+            paralaxShiftAmount: this.paralaxShiftAmount,
+            transparentcolor: this.transparentcolor,
+            world: this.world
+        }
+    }
 }

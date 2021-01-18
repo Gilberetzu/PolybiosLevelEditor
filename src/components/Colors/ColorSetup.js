@@ -19,7 +19,8 @@ const Colors = {
     editorBg2Color: baseColors[3],
     editorButtonHoverBG: baseColors[4],
     editorUIText: baseColors[5],
-    redColor: iconColors[0]
+    redColor: iconColors[0],
+    selectionBoxColor: baseColors[2]
 }
 
 function createColorHex(){

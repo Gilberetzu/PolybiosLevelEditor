@@ -1,6 +1,7 @@
 <script>
     import OpenProjectIcon from "../Icons/OpenProject.svelte";
     import CreateNewIcon from "../Icons/CreateNew.svelte";
+    import SaveProjectIcon from "../Icons/SaveIcon.svelte";
     import CreateNewLevel from "../TopMenu/CreateNewLevel.svelte";
     export let projectManager;
 
@@ -14,6 +15,10 @@
     let clickCreate = (e) => {
         openCreateLevelWindow();
     };
+
+    let saveProject = () => {
+        projectManager.save();
+    }
 
     let inputChanged = (e) => {
         projectManager.loadProject(inputPath.files[0].path);
@@ -54,6 +59,9 @@
     </div>
     <div class="topMenuButton" on:click={clickCreate}>
         <CreateNewIcon />
+    </div>
+    <div class="topMenuButton" on:click={saveProject}>
+        <SaveProjectIcon />
     </div>
 </div>
 

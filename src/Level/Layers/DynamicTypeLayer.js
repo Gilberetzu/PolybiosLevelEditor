@@ -3,4 +3,11 @@ export default class DynamicTypeLayer{
         this.transparentcolor = transparentcolor;
         this.world = [];
     }
+
+    createSaveData(){
+        return {
+            type: "DYNAMIC_TYPE_LAYER",
+            world: this.world
+        }
+    }
 }

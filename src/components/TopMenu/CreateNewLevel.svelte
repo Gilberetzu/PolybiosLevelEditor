@@ -6,7 +6,8 @@
     import HeightIcon from "../Icons/Height.svelte";
     import WidthIcon from "../Icons/Width.svelte";
     import LayerConfiguration from "./LayerConfiguration.svelte";
-    
+    import CollisionConfiguration from "./CollisionConfiguration.svelte";
+
     import ColorPicker from "../ColorPicker/ColorPicker.svelte";
 
     import IconInput from "../IconInput/IconInput.svelte";
@@ -18,7 +19,7 @@
     let levelName;
     let levelWidth;
     let levelHeight;
-    let createCollision;
+    let getCollsionDataArray = [];
     let backgroundColor;
 
     let getLayer1;
@@ -26,21 +27,56 @@
     let getLayer3;
     let getLayer4;
 
+    const checkCollisionLayers = (collisionLayers) => {
+        for (let i = 0; i < collisionLayers.length; i++) {
+            const collisionLayer = collisionLayers[i];
+            for (let j = 0; j < collisionLayers.length; j++) {
+                if(j != i){
+                    const otherCollisionLayer = collisionLayers[j];
+
+                    if(collisionLayer.name == otherCollisionLayer.name){
+                        throw new Error(`Collision Layer ${i} has the same name of the collision layer ${j}`)
+                    }else if(collisionLayer.layerId == otherCollisionLayer.layerId){
+                        throw new Error(`Collision Layer ${i} has the same layerId of the collision layer ${j}`)
+                    }
+                }
+            }
+        }
+    }
+
     const createLevel = () => {
         try {
+            let collisionLayers = [];
+            for (let index = 0; index < getCollsionDataArray.length; index++) {
+                const getCollisionData = getCollsionDataArray[index];
+                collisionLayers.push(getCollisionData());
+            }
+
+            checkCollisionLayers(collisionLayers);
+
             projectManager.levelCollection.addNewLevel({
                 width: levelWidth,
                 height: levelHeight,
                 name: levelName,
-                createCollision: createCollision,
                 layers: [getLayer1(), getLayer2(), getLayer3(), getLayer4()],
-                backgroundColor: backgroundColor
+                backgroundColor: backgroundColor,
+                collisionLayers: collisionLayers
             });
+            
             closeWindow();
         } catch (error) {
             //TODO: changed for a window prompt
             console.log(error);
         }
+    };
+
+    const addCollisionLayer = () => {
+        getCollsionDataArray = [...getCollsionDataArray, null];
+    };
+
+    const removeCollisionLayer = (index) => {
+        getCollsionDataArray.splice(index);
+        getCollsionDataArray = [...getCollsionDataArray];
     };
 </script>
 
@@ -59,12 +95,8 @@
         font-size: 1.2em;
         font-weight: 700;
     }
-    .createCollision {
-        display: grid;
-        grid-template-columns: auto auto;
-    }
     .sectionContainer {
-        margin-bottom: 16px;
+        margin-bottom: 32px;
     }
 </style>
 
@@ -104,10 +136,22 @@
                 bind:pickedColor={backgroundColor} />
         </div>
 
-        <div class="createCollision sectionContainer">
-            <div class="inputSectionTitle">Create Collision</div>
-            <Checkbox bind:value={createCollision} />
+        <div class="sectionContainer">
+            <div class="inputSectionTitle">Collision Layers</div>
+            <PrimaryButton
+                label={'Create Collision Layer'}
+                on:click={addCollisionLayer} />
         </div>
+
+        {#each getCollsionDataArray as getData, i}
+            <div class="sectionContainer">
+                <div class="inputSectionTitle">Collision Layer {i + 1}</div>
+                <CollisionConfiguration
+                    bind:getCollisionLayer={getData}
+                    {removeCollisionLayer}
+                    layerIndex={i} />
+            </div>
+        {/each}
 
         <div class="sectionContainer">
             <div class="inputSectionTitle">Layer 1</div>

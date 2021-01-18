@@ -13,6 +13,7 @@ export default class ProjectManager {
     constructor() {
         this.spriteCollection = new SpriteCollection();
         this.levelCollection = new LevelCollection();
+        this.projectPath = "";
         this.name = "";
 
         PIXI.settings.ROUND_PIXELS = true;
@@ -42,19 +43,11 @@ export default class ProjectManager {
         }
     }
 
-    loadProject(projectConfigPath) {
-        const projectConfig = JSON.parse(fs.readFileSync(projectConfigPath).toString());
-
-        console.log(projectConfig)
-
-        this.name = projectConfig.name;
-
+    loadSprites(projectSpriteData){
         let texturesMetaData = [];
 
-        console.log(texturesMetaData);
-
-        for (let i = 0; i < projectConfig.sprites.length; i++) {
-            const spriteData = projectConfig.sprites[i];
+        for (let i = 0; i < projectSpriteData.length; i++) {
+            const spriteData = projectSpriteData[i];
 
             if (spriteData.type == "Sprite") {
                 texturesMetaData.push(
@@ -92,5 +85,28 @@ export default class ProjectManager {
             this.pixiApp.loader, 
             this.createSprites.bind(this)
         );
+    }
+
+    loadProject(projectConfigPath) {
+        this.projectPath = projectConfigPath;
+        const projectData = JSON.parse(fs.readFileSync(this.projectPath).toString());
+
+        this.name = projectData.name;
+
+        if(projectData.levels){
+            for (let i = 0; i < projectData.levels.length; i++) {
+                const level = projectData.levels[i];
+                this.levelCollection.addLevelFromSaveData(level)
+            }
+        }
+
+        this.loadSprites(projectData.sprites);
+    }
+
+    save(){
+        let projectData = JSON.parse(fs.readFileSync(this.projectPath).toString());
+        projectData.levels = this.levelCollection.createSaveData();
+
+        fs.writeFileSync(this.projectPath, JSON.stringify(projectData));
     }
 }

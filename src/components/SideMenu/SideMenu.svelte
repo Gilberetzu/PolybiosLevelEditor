@@ -1,9 +1,11 @@
 <script>
-    import LevelsIcon from "../Icons/Levels.svelte";
+    import LevelsListIcon from "../Icons/LevelsList.svelte";
+    import CurrentLevelIcon from "../Icons/Levels.svelte";
     import SpritesIcon from "../Icons/Sprites.svelte";
 
     import SpriteCollection from "./SpriteCollection.svelte";
     import LevelsCollection from "./LevelsCollection.svelte";
+    import CurrentLevel from "./CurrentLevel.svelte";
 
     export let projectManager;
 
@@ -13,9 +15,13 @@
             menuComponent: SpriteCollection,
         },
         levelsMenu: {
-            icon: LevelsIcon,
+            icon: LevelsListIcon,
             menuComponent: LevelsCollection,
         },
+        currentLevel: {
+            icon: CurrentLevelIcon,
+            menuComponent: CurrentLevel
+        }
     };
 
     let currentMenu;

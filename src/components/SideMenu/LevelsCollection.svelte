@@ -68,7 +68,7 @@
         position: relative;
     }
     .selectableRow {
-        padding: 8px 0px 8px 0px;
+        padding: 8px 8px 8px 8px;
         border-radius: 24px;
     }
     .selectableRow:hover {

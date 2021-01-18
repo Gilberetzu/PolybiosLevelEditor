@@ -1,6 +1,7 @@
-<script>
+<!--
+    <script>
     import { onMount } from "svelte";
-    import { editorStates } from "../../LevelEditor/LevelEditor";
+    //import { editorStates } from "../../LevelEditor/LevelEditor";
     export let projectManager;
 
     const editorStatesLabels = {
@@ -107,3 +108,5 @@
         </div>
     </div>
 {/if}
+
+-->

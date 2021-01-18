@@ -63,16 +63,6 @@ export default class ArrayEditableElement {
         this.gridVisual.drawRect(0, 0, this.size, this.size);
     }
 
-    /*drawBackground() {
-        this.spriteBackground.clear();
-        const bgColor = this.editor.getLayerBackgroundColor();
-        const color = (bgColor[0] << 16) + (bgColor[1] << 8) + bgColor[2];
-        this.spriteBackground.lineStyle(0);
-        this.spriteBackground.beginFill(color);
-        this.spriteBackground.drawRect(0, 0, this.size, this.size);
-        this.spriteBackground.endFill();
-    }*/
-
     showSelectedSprite() {
         if (this.tileSpriteName) {
             if (this.tileSpriteName == "TRANSPARENT") {
